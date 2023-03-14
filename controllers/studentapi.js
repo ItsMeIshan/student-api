@@ -1,9 +1,9 @@
-const Student = require("../models/students");
+const { Student, Department } = require("../models");
 const { StatusCodes } = require("http-status-codes");
 
 const createStudent = async (req, res) => {
-  const { name, email, age } = req.body;
-  if (!name || !email || !age) {
+  const { firstName, lastname, age, department_id } = req.body;
+  if (!firstName || !lastname || !age || !department_id) {
     res
       .status(StatusCodes.BAD_REQUEST)
       .json({ msg: "please enter all the details" });
@@ -11,9 +11,10 @@ const createStudent = async (req, res) => {
 
   try {
     const result = await Student.create({
-      name: name,
-      email: email,
+      firstName: firstName,
+      lastname: lastname,
       age: age,
+      department_id: department_id,
     });
     res.status(StatusCodes.CREATED).json({ msg: "student created!" });
   } catch (err) {
@@ -111,7 +112,13 @@ const updateStudent = async (req, res) => {
 
 const getAllStudents = async (req, res) => {
   try {
-    const students = await Student.findAll();
+    const students = await Student.findAll({
+      include: [
+        {
+          model: Department,
+        },
+      ],
+    });
     res.status(StatusCodes.OK).send(JSON.stringify(students));
   } catch (err) {
     console.log(err);

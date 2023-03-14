@@ -3,7 +3,8 @@ const app = express();
 const cors = require("cors");
 const router = require("./routes/routes");
 const sequelise = require("./db/database");
-const Student = require("./models/students");
+const Student = require("./models/student");
+const Department = require("./models/department");
 
 app.use(cors());
 app.use(express.json());
